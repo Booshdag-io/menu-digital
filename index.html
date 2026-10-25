@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Sabor Catracho Express | Menú Digital & Pedidos WhatsApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #f97316;
+      --primary-hover: #ea580c;
+      --primary-light: #ffedd5;
+      --secondary: #10b981;
+      --dark: #0f172a;
+      --card-bg: #ffffff;
+      --bg: #f8fafc;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 16px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      padding-bottom: 90px;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #ea580c, #c2410c);
+      color: white;
+      padding: 24px 20px 30px;
+      border-bottom-left-radius: 28px;
+      border-bottom-right-radius: 28px;
+      box-shadow: 0 10px 20px -5px rgba(234, 88, 12, 0.3);
+      position: relative;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .badge-open {
+      background: rgba(16, 185, 129, 0.25);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #a7f3d0;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-open::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .btn-config {
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: all 0.2s;
+    }
+
+    .btn-config:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .hero-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .hero-desc {
+      font-size: 14px;
+      color: #ffedd5;
+      margin-bottom: 18px;
+    }
+
+    .hero-info-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .info-pill {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 6px 12px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Categorías */
+    .categories-container {
+      position: sticky;
+      top: 0;
+      background: rgba(248, 250, 252, 0.95);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+      padding: 14px 20px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .categories-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      background: white;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-btn.active {
+      background: var(--dark);
+      border-color: var(--dark);
+      color: white;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+
+    /* Catálogo de Productos */
+    .menu-section {
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .img-wrapper {
+      position: relative;
+      width: 100%;
+      height: 160px;
+      overflow: hidden;
+      background: #e2e8f0;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-img {
+      transform: scale(1.05);
+    }
+
+    .product-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(6px);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .product-content {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .product-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      margin-bottom: 14px;
+      flex-grow: 1;
+    }
+
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .price-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .price-hnl {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .price-usd {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .btn-add {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .btn-add:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-add:active {
+      transform: scale(0.95);
+    }
+
+    /* Barra flotante de carrito */
+    .cart-bar {
+      position: fixed;
+      bottom: 16px;
+      left: 20px;
+      right: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--dark);
+      color: white;
+      padding: 14px 20px;
+      border-radius: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 15px 30px rgba(15, 23, 42, 0.35);
+      z-index: 100;
+      cursor: pointer;
+      transform: translateY(120px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .cart-bar.visible {
+      transform: translateY(0);
+    }
+
+    .cart-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cart-count-badge {
+      background: var(--primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .cart-total-text {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .cart-total-amount {
+      font-size: 17px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .cart-action-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fed7aa;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Modales */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      display: none;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      padding: 24px 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .btn-close {
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Lista de ítems en carrito */
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-info {
+      flex: 1;
+      padding-right: 12px;
+    }
+
+    .cart-item-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .cart-item-price {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .cart-qty-ctrl {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 4px 8px;
+    }
+
+    .btn-qty {
+      background: none;
+      border: none;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--dark);
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-qty-number {
+      font-size: 14px;
+      font-weight: 800;
+      min-width: 16px;
+      text-align: center;
+    }
+
+    /* Tipo de entrega */
+    .delivery-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 16px 0;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .toggle-opt {
+      padding: 8px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-muted);
+    }
+
+    .toggle-opt.active {
+      background: white;
+      color: var(--dark);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    /* Formularios */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--primary);
+    }
+
+    .order-breakdown {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 12px;
+      margin: 14px 0;
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+    }
+
+    .breakdown-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--dark);
+      border-top: 1px dashed var(--border);
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 8px 16px rgba(37, 211, 102, 0.25);
+      transition: all 0.2s;
+    }
+
+    .btn-whatsapp:hover {
+      background: #20ba59;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado del Restaurante -->
+  <header>
+    <div class="header-top">
+      <span class="badge-open">Abierto ahora</span>
+      <button class="btn-config" onclick="openConfigModal()">⚙️ Configurar Demo</button>
+    </div>
+    <h1 class="hero-title" id="bizName">Sabor Catracho Express</h1>
+    <p class="hero-desc">Baleadas gourmet, pollo con tajadas y comida tradicional al momento.</p>
+    <div class="hero-info-pills">
+      <span class="info-pill">📍 San Pedro Sula & La Lima</span>
+      <span class="info-pill">🛵 25 - 40 min</span>
+      <span class="info-pill">💵 Efectivo o Transferencia</span>
+    </div>
+  </header>
+
+  <!-- Filtro de Categorías -->
+  <div class="categories-container" id="categoryTabs">
+    <button class="cat-btn active" onclick="filterCategory('todos', this)">🔥 Todos</button>
+    <button class="cat-btn" onclick="filterCategory('baleadas', this)">🌯 Baleadas</button>
+    <button class="cat-btn" onclick="filterCategory('hamburguesas', this)">🍔 Hamburguesas</button>
+    <button class="cat-btn" onclick="filterCategory('carnes', this)">🍗 Carnes & Pollo</button>
+    <button class="cat-btn" onclick="filterCategory('bebidas', this)">🥤 Bebidas</button>
+    <button class="cat-btn" onclick="filterCategory('postres', this)">🍰 Postres</button>
+  </div>
+
+  <!-- Catálogo -->
+  <main class="menu-section">
+    <div class="section-title">
+      <span>🍽️</span> Menú del Día
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- Se genera dinámicamente con JavaScript -->
+    </div>
+  </main>
+
+  <!-- Barra flotante de carrito -->
+  <div class="cart-bar" id="cartBar" onclick="openCartModal()">
+    <div class="cart-info">
+      <div class="cart-count-badge" id="cartBadgeCount">0</div>
+      <div>
+        <div class="cart-total-text">Total acumulado</div>
+        <div class="cart-total-amount" id="cartBarTotal">L. 0.00</div>
+      </div>
+    </div>
+    <div class="cart-action-text">
+      <span>Ver Pedido</span>
+      <span>➔</span>
+    </div>
+  </div>
+
+  <!-- Modal del Carrito -->
+  <div class="modal-overlay" id="cartModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Tu Pedido</h2>
+        <button class="btn-close" onclick="closeCartModal()">✕</button>
+      </div>
+
+      <div id="cartItemsList">
+        <!-- Ítems -->
+      </div>
+
+      <div class="delivery-toggle">
+        <div class="toggle-opt active" id="optDelivery" onclick="setDeliveryMode('delivery')">🛵 A Domicilio</div>
+        <div class="toggle-opt" id="optPickup" onclick="setDeliveryMode('pickup')">🏬 Para Llevar</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Tu Nombre Completo *</label>
+        <input type="text" class="form-input" id="custName" placeholder="Ej: David Telles">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Teléfono de Contacto *</label>
+        <input type="tel" class="form-input" id="custPhone" placeholder="Ej: 9876-5432">
+      </div>
+
+      <div class="form-group" id="addressGroup">
+        <label class="form-label">Dirección / Referencia de Entrega *</label>
+        <input type="text" class="form-input" id="custAddress" placeholder="Ej: Bo. Guamilito, 3ra calle, frente a farmacia...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Método de Pago</label>
+        <select class="form-input" id="custPayment" onchange="toggleCashInput(this.value)">
+          <option value="Efectivo">💵 Efectivo al recibir</option>
+          <option value="Transferencia BAC">🏦 Transferencia BAC Credomatic</option>
+          <option value="Transferencia Atlantida">🏦 Transferencia Banco Atlántida</option>
+          <option value="Transferencia Ficohsa">🏦 Transferencia Ficohsa</option>
+        </select>
+      </div>
+
+      <div class="form-group" id="cashChangeGroup">
+        <label class="form-label">¿Con cuánto billete pagas? (Para llevar cambio)</label>
+        <input type="text" class="form-input" id="custCashAmount" placeholder="Ej: Pago con billete de L. 500">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Notas Adicionales (Opcional)</label>
+        <input type="text" class="form-input" id="custNotes" placeholder="Ej: Sin cebolla, aderezo aparte...">
+      </div>
+
+      <div class="order-breakdown">
+        <div class="breakdown-row">
+          <span>Subtotal productos</span>
+          <span id="breakdownSubtotal">L. 0.00</span>
+        </div>
+        <div class="breakdown-row" id="rowDeliveryFee">
+          <span>Costo de envío</span>
+          <span id="breakdownDelivery">L. 40.00</span>
+        </div>
+        <div class="breakdown-total">
+          <span>Total a Pagar</span>
+          <span id="breakdownTotal">L. 0.00</span>
+        </div>
+      </div>
+
+      <button class="btn-whatsapp" onclick="sendOrderToWhatsApp()">
+        <span>📲 Enviar Pedido por WhatsApp</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal de Configuración (Para que David cambie el número al venderlo) -->
+  <div class="modal-overlay" id="configModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">⚙️ Ajustes del Negocio</h2>
+        <button class="btn-close" onclick="closeConfigModal()">✕</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+        Configura los datos del restaurante que compre tu sistema. Los cambios se guardan al instante.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">Nombre del Restaurante</label>
+        <input type="text" class="form-input" id="cfgBizName" value="Sabor Catracho Express">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Número de WhatsApp (con código de país sin +)</label>
+        <input type="text" class="form-input" id="cfgPhone" placeholder="Ej: 50499999999" value="50498765432">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Costo de Envío Domicilio (Lempiras)</label>
+        <input type="number" class="form-input" id="cfgDeliveryFee" value="40">
+      </div>
+
+      <button class="btn-add" style="width: 100%; justify-content: center; padding: 12px; margin-top: 10px;" onclick="saveConfig()">
+        💾 Guardar Cambios
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Configuración inicial o guardada
+    let config = {
+      bizName: localStorage.getItem('cfg_bizName') || 'Sabor Catracho Express',
+      phone: localStorage.getItem('cfg_phone') || '50498765432',
+      deliveryFee: Number(localStorage.getItem('cfg_deliveryFee') || 40),
+      usdRate: 25.0
+    };
+
+    // Menú de Productos Catrachos y Comida Rápida
+    const products = [
+      {
+        id: 1,
+        category: 'baleadas',
+        name: 'Baleada Especial con Carne',
+        desc: 'Tortilla de harina suave recién hecha, frijoles fritos, mantequilla crema, queso rallado, huevo picado y carne asada marinada.',
+        price: 65,
+        tag: '⭐ Más Vendido',
+        img: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 2,
+        category: 'baleadas',
+        name: 'Baleada Mega Suprema',
+        desc: 'Con todo: frijoles, queso, mantequilla, aguacate fresco, plátano frito maduro y chorizo criollo.',
+        price: 75,
+        tag: '🔥 Favorito',
+        img: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 3,
+        category: 'baleadas',
+        name: 'Baleada Sencilla',
+        desc: 'La clásica de siempre: tortilla caliente con frijoles fritos especiales, mantequilla crema y queso seco.',
+        price: 30,
+        tag: 'Tradicional',
+        img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 4,
+        category: 'carnes',
+        name: 'Pollo con Tajadas (Pollo Chuco)',
+        desc: 'Pierna y muslo crujiente al estilo sampedrano, sobre cama de tajadas de plátano verde, repollo, chismol, encurtido y salsa dulce-rosada.',
+        price: 140,
+        tag: '🍗 Clásico SPS',
+        img: 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 5,
+        category: 'carnes',
+        name: 'Plato de Carne Asada La Lima',
+        desc: 'Corte jugoso de carne de res al carbón con chismol, frijoles fritos, tajadas fritas o tortilla de maíz y cuajada fresca.',
+        price: 180,
+        tag: '🥩 Parrilla',
+        img: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 6,
+        category: 'hamburguesas',
+        name: 'Doble Bacon Cheeseburger',
+        desc: 'Doble torta de carne 100% de res, doble queso cheddar fundido, tocino crujiente, lechuga, tomate y salsa especial en pan brioche.',
+        price: 155,
+        tag: '🍔 Premium',
+        img: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 7,
+        category: 'hamburguesas',
+        name: 'Crispy Chicken Burger',
+        desc: 'Pechuga de pollo empanizada súper crocante, pepinillos dulces, ensalada de col y mayonesa chipotle.',
+        price: 135,
+        tag: 'Crujiente',
+        img: 'https://images.unsplash.com/photo-1625813506062-0aeb1d7a094b?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 8,
+        category: 'bebidas',
+        name: 'Horchata Casera 500ml',
+        desc: 'Horchata tradicional hondureña elaborada con semillas de morro, arroz, canela y leche, bien fría con hielo.',
+        price: 35,
+        tag: 'Bebida',
+        img: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 9,
+        category: 'bebidas',
+        name: 'Jugo Natural de Maracuyá',
+        desc: '100% pulpa natural de fruta de la pasión, refrescante y recién batido.',
+        price: 35,
+        tag: 'Natural',
+        img: 'https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=600&auto=format&fit=crop&q=80'
+      },
+      {
+        id: 10,
+        category: 'postres',
+        name: 'Pastel Tres Leches Individual',
+        desc: 'Bizcocho esponjoso bañado en la tradicional mezcla de tres leches con merengue flameado y canela.',
+        price: 60,
+        tag: 'Postre',
+        img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&auto=format&fit=crop&q=80'
+      }
+    ];
+
+    let cart = [];
+    let deliveryMode = 'delivery'; // 'delivery' o 'pickup'
+
+    // Renderizar productos
+    function renderProducts(filter = 'todos') {
+      const grid = document.getElementById('productGrid');
+      grid.innerHTML = '';
+      
+      const filtered = filter === 'todos' 
+        ? products 
+        : products.filter(p => p.category === filter);
+
+      filtered.forEach(p => {
+        const usdPrice = (p.price / config.usdRate).toFixed(2);
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="img-wrapper">
+            <img class="product-img" src="${p.img}" alt="${p.name}" loading="lazy">
+            <span class="product-tag">${p.tag}</span>
+          </div>
+          <div class="product-content">
+            <h3 class="product-name">${p.name}</h3>
+            <p class="product-desc">${p.desc}</p>
+            <div class="product-footer">
+              <div class="price-box">
+                <span class="price-hnl">L. ${p.price.toFixed(2)}</span>
+                <span class="price-usd">~$${usdPrice} USD</span>
+              </div>
+              <button class="btn-add" onclick="addToCart(${p.id})">
+                <span>+ Agregar</span>
+              </button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Filtrar categoría
+    function filterCategory(cat, btn) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderProducts(cat);
+    }
+
+    // Agregar al carrito
+    function addToCart(productId) {
+      const prod = products.find(p => p.id === productId);
+      const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...prod, qty: 1, note: '' });
+      }
+      updateCartUI();
+      // Pequeña vibración en móviles si soportado
+      if (navigator.vibrate) navigator.vibrate(35);
+    }
+
+    function changeQty(productId, delta) {
+      const item = cart.find(i => i.id === productId);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) {
+        cart = cart.filter(i => i.id !== productId);
+      }
+      updateCartUI();
+      renderCartModal();
+    }
+
+    // Actualizar barra flotante
+    function updateCartUI() {
+      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      
+      const cartBar = document.getElementById('cartBar');
+      const badge = document.getElementById('cartBadgeCount');
+      const barTotal = document.getElementById('cartBarTotal');
+
+      badge.innerText = totalCount;
+      barTotal.innerText = `L. ${subtotal.toFixed(2)}`;
+
+      if (totalCount > 0) {
+        cartBar.classList.add('visible');
+      } else {
+        cartBar.classList.remove('visible');
+        closeCartModal();
+      }
+    }
+
+    // Modal de Carrito
+    function openCartModal() {
+      if (cart.length === 0) return;
+      renderCartModal();
+      document.getElementById('cartModal').classList.add('open');
+    }
+
+    function closeCartModal() {
+      document.getElementById('cartModal').classList.remove('open');
+    }
+
+    function renderCartModal() {
+      const list = document.getElementById('cartItemsList');
+      list.innerHTML = '';
+
+      cart.forEach(item => {
+        const itemRow = document.createElement('div');
+        itemRow.className = 'cart-item';
+        itemRow.innerHTML = `
+          <div class="cart-item-info">
+            <div class="cart-item-name">${item.name}</div>
+            <div class="cart-item-price">L. ${item.price.toFixed(2)} c/u</div>
+          </div>
+          <div class="cart-qty-ctrl">
+            <button class="btn-qty" onclick="changeQty(${item.id}, -1)">−</button>
+            <span class="cart-qty-number">${item.qty}</span>
+            <button class="btn-qty" onclick="changeQty(${item.id}, 1)">+</button>
+          </div>
+        `;
+        list.appendChild(itemRow);
+      });
+
+      calculateTotals();
+    }
+
+    function setDeliveryMode(mode) {
+      deliveryMode = mode;
+      document.getElementById('optDelivery').classList.toggle('active', mode === 'delivery');
+      document.getElementById('optPickup').classList.toggle('active', mode === 'pickup');
+      document.getElementById('addressGroup').style.display = mode === 'delivery' ? 'block' : 'none';
+      document.getElementById('rowDeliveryFee').style.display = mode === 'delivery' ? 'flex' : 'none';
+      calculateTotals();
+    }
+
+    function toggleCashInput(method) {
+      const isCash = method === 'Efectivo';
+      document.getElementById('cashChangeGroup').style.display = isCash ? 'block' : 'none';
+    }
+
+    function calculateTotals() {
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const delivery = deliveryMode === 'delivery' ? config.deliveryFee : 0;
+      const total = subtotal + delivery;
+      const usdTotal = (total / config.usdRate).toFixed(2);
+
+      document.getElementById('breakdownSubtotal').innerText = `L. ${subtotal.toFixed(2)}`;
+      document.getElementById('breakdownDelivery').innerText = `L. ${delivery.toFixed(2)}`;
+      document.getElementById('breakdownTotal').innerText = `L. ${total.toFixed(2)} (~$${usdTotal} USD)`;
+    }
+
+    // Envío por WhatsApp
+    function sendOrderToWhatsApp() {
+      const name = document.getElementById('custName').value.trim();
+      const phone = document.getElementById('custPhone').value.trim();
+      const address = document.getElementById('custAddress').value.trim();
+      const payment = document.getElementById('custPayment').value;
+      const cashAmount = document.getElementById('custCashAmount').value.trim();
+      const notes = document.getElementById('custNotes').value.trim();
+
+      if (!name) {
+        alert('Por favor ingresa tu nombre completo.');
+        return;
+      }
+      if (!phone) {
+        alert('Por favor ingresa tu número de teléfono.');
+        return;
+      }
+      if (deliveryMode === 'delivery' && !address) {
+        alert('Por favor ingresa tu dirección o referencia para la entrega.');
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+      const delivery = deliveryMode === 'delivery' ? config.deliveryFee : 0;
+      const total = subtotal + delivery;
+
+      // Construcción del mensaje formateado
+      let msg = `*¡NUEVO PEDIDO - ${config.bizName.toUpperCase()}!* 🛵\n`;
+      msg += `--------------------------------\n`;
+      msg += `👤 *Cliente:* ${name}\n`;
+      msg += `📞 *Teléfono:* ${phone}\n`;
+      msg += `🛵 *Modalidad:* ${deliveryMode === 'delivery' ? 'A Domicilio' : 'Para Llevar'}\n`;
+      if (deliveryMode === 'delivery') {
+        msg += `📍 *Dirección:* ${address}\n`;
+      }
+      msg += `💳 *Método de Pago:* ${payment}\n`;
+      if (payment === 'Efectivo' && cashAmount) {
+        msg += `💵 *Cambio con:* ${cashAmount}\n`;
+      }
+      if (notes) {
+        msg += `📝 *Observaciones:* ${notes}\n`;
+      }
+      msg += `--------------------------------\n`;
+      msg += `📋 *PRODUCTOS:* \n`;
+      cart.forEach(item => {
+        msg += `• ${item.qty}x ${item.name} (L. ${(item.price * item.qty).toFixed(2)})\n`;
+      });
+      msg += `--------------------------------\n`;
+      msg += `💵 *Subtotal:* L. ${subtotal.toFixed(2)}\n`;
+      if (deliveryMode === 'delivery') {
+        msg += `🛵 *Envío:* L. ${delivery.toFixed(2)}\n`;
+      }
+      msg += `🔥 *TOTAL A PAGAR:* L. ${total.toFixed(2)}\n`;
+      msg += `--------------------------------\n`;
+      msg += `_Enviado desde el Menú Digital_`;
+
+      const encoded = encodeURIComponent(msg);
+      const url = `https://wa.me/${config.phone}?text=${encoded}`;
+      window.open(url, '_blank');
+    }
+
+    // Modal de Configuración
+    function openConfigModal() {
+      document.getElementById('cfgBizName').value = config.bizName;
+      document.getElementById('cfgPhone').value = config.phone;
+      document.getElementById('cfgDeliveryFee').value = config.deliveryFee;
+      document.getElementById('configModal').classList.add('open');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('configModal').classList.remove('open');
+    }
+
+    function saveConfig() {
+      config.bizName = document.getElementById('cfgBizName').value.trim() || 'Sabor Catracho Express';
+      config.phone = document.getElementById('cfgPhone').value.trim() || '50498765432';
+      config.deliveryFee = Number(document.getElementById('cfgDeliveryFee').value) || 40;
+
+      localStorage.setItem('cfg_bizName', config.bizName);
+      localStorage.setItem('cfg_phone', config.phone);
+      localStorage.setItem('cfg_deliveryFee', config.deliveryFee);
+
+      document.getElementById('bizName').innerText = config.bizName;
+      closeConfigModal();
+      alert('¡Configuración guardada! Ahora los pedidos irán a este número de WhatsApp.');
+    }
+
+    // Inicializar
+    document.getElementById('bizName').innerText = config.bizName;
+    renderProducts();
+  </script>
+</body>
+</html>
